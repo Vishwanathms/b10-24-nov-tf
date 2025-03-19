@@ -42,41 +42,20 @@ resource "aws_instance" "instances2" {
   #tags = var.inst_config[count.index].tags
   tags = {
     Name = "${local.tag_name}-vm01"
+    Owner = "Vishwacloud"
   }
   monitoring = var.inst_config[count.index].monitoring
   #depends_on = [ aws_s3_bucket.s3rn ]
+  # lifecycle {
+  #   create_before_destroy = true
+  #   prevent_destroy = true
+  #   ignore_changes = [ instance_type  ]
+  # }
 }
 
-resource "aws_s3_bucket" "s3rn" {
-  bucket = "vishwa11032025"
-}
+
 
 output "tag_name" {
   value = local.tag_name
 }
 
-output "vpc_id" {
-  value = data.aws_vpc.get_vpc_id.id
-}
-
-output "subnets_id" {
-  value = data.aws_subnets.subnets_id.ids
-}
-
-output "subnets_id1" {
-  value = data.aws_subnets.subnets_id.ids[0]
-}
-
-output "subet_ids" {
-  #value = data.aws_subnet.example.id[*]
-  value = { for n in data.aws_subnet.example : n.id => n.cidr_block }
-}
-
-# output "subet1_cidrs" {
-#   #value = data.aws_subnet.example.id[*]
-#   value = [for n in data.aws_subnet.example : n.cidr_block]
-# }
-
-output "public_ip" {
-  value = aws_instance.instances2[*].public_ip
-}

@@ -42,9 +42,15 @@ resource "aws_instance" "instances2" {
   #tags = var.inst_config[count.index].tags
   tags = {
     Name = "${local.tag_name}-vm01"
+    Owner = "Vishwacloud"
   }
   monitoring = var.inst_config[count.index].monitoring
   #depends_on = [ aws_s3_bucket.s3rn ]
+  # lifecycle {
+  #   create_before_destroy = true
+  #   prevent_destroy = true
+  #   ignore_changes = [ instance_type  ]
+  # }
 }
 
 resource "aws_s3_bucket" "s3rn" {
